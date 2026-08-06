@@ -35,13 +35,13 @@ bain-github-training/
 
 **GitHub Desktop:**
 1. Open GitHub Desktop → File → Clone Repository
-2. Paste the URL of this repo
+2. Paste: `https://github.com/ajayarn/Github-Training-For-Consultants.git`
 3. Choose a folder on your laptop → Click **Clone**
 
 **Command Line:**
 ```bash
-git clone <REPO_URL>
-cd bain-github-training
+git clone https://github.com/ajayarn/Github-Training-For-Consultants.git
+cd Github-Training-For-Consultants
 ```
 
 ---
