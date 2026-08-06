@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub for Consultants</title>
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --bain-red: #CC0000;
+      --bain-dark: #1a1a2e;
+      --bain-gray: #4a4a4a;
+      --bain-light: #f5f5f5;
+      --accent: #0077b6;
+    }
+
+    .reveal {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 32px;
+      color: #222;
+    }
+
+    /* ── TITLE SLIDE ── */
+    .title-slide { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 60%, #CC0000 100%); }
+    .title-slide h1 { color: #fff !important; font-size: 1.9em !important; line-height: 1.2; }
+    .title-slide h2 { color: rgba(255,255,255,0.75) !important; font-size: 0.9em !important; font-weight: 300; }
+    .title-slide .subtitle { color: #ffaaaa; font-size: 0.65em; margin-top: 0.4em; }
+
+    /* ── SECTION DIVIDERS ── */
+    .section-slide { background: var(--bain-red); }
+    .section-slide h2 { color: #fff !important; font-size: 1.6em !important; }
+    .section-slide p { color: rgba(255,255,255,0.85) !important; }
+
+    /* ── GENERAL HEADINGS ── */
+    .reveal h2 { color: var(--bain-red); font-size: 1.1em; margin-bottom: 0.4em; border-bottom: 3px solid var(--bain-red); padding-bottom: 0.15em; }
+    .reveal h3 { color: var(--bain-dark); font-size: 0.85em; }
+
+    /* ── CARDS GRID ── */
+    .cards { display: grid; gap: 16px; }
+    .cards-2 { grid-template-columns: 1fr 1fr; }
+    .cards-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+      border-left: 5px solid var(--bain-red);
+      text-align: left;
+    }
+    .card .emoji { font-size: 1.4em; display: block; margin-bottom: 6px; }
+    .card strong { font-size: 0.65em; color: var(--bain-red); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card p, .card span { font-size: 0.52em; color: #444; line-height: 1.5; margin: 0; }
+
+    /* ── STEP BOXES ── */
+    .steps { display: flex; flex-direction: column; gap: 10px; }
+    .step {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: #fff; border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .step-num {
+      background: var(--bain-red); color: #fff;
+      border-radius: 50%; width: 34px; height: 34px; min-width: 34px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.55em;
+    }
+    .step-body strong { font-size: 0.6em; color: #111; display: block; }
+    .step-body span { font-size: 0.5em; color: #555; }
+    .step-body code { font-size: 0.48em; background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-family: 'Courier New', monospace; }
+
+    /* ── COMMAND BLOCKS ── */
+    .cmd-block {
+      background: #1a1a2e; color: #a8ff78;
+      border-radius: 10px; padding: 16px 22px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.52em; text-align: left;
+      margin: 10px 0; line-height: 1.8;
+    }
+    .cmd-block .comment { color: #888; }
+    .cmd-block .prompt { color: #ffaaaa; }
+
+    /* ── CONCEPT ANALOGY ── */
+    .analogy {
+      background: linear-gradient(135deg, #f0f4ff, #fff0f0);
+      border-radius: 14px; padding: 20px 24px;
+      border: 1px solid #ddd; font-size: 0.6em;
+      text-align: left; line-height: 1.7;
+    }
+    .analogy .label { font-weight: 700; color: var(--bain-red); font-size: 1.05em; }
+
+    /* ── GLOSSARY ── */
+    .glossary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .gloss-item {
+      background: #fff; border-radius: 10px; padding: 14px 16px;
+      border-top: 4px solid var(--bain-red);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .gloss-item .term { font-size: 0.58em; font-weight: 700; color: var(--bain-red); }
+    .gloss-item .def { font-size: 0.48em; color: #444; margin-top: 4px; line-height: 1.6; }
+
+    /* ── DOWNLOAD BOXES ── */
+    .download-box {
+      background: #fff; border-radius: 14px;
+      padding: 20px 24px; box-shadow: 0 3px 14px rgba(0,0,0,0.10);
+      border-bottom: 5px solid var(--bain-red); text-align: left;
+    }
+    .download-box .tool-name { font-size: 0.65em; font-weight: 700; color: #111; }
+    .download-box .tool-desc { font-size: 0.5em; color: #555; margin: 4px 0 10px; }
+    .download-box .url { font-size: 0.48em; background: #f0f0f0; border-radius: 6px; padding: 4px 10px; font-family: monospace; display: inline-block; color: var(--accent); }
+    .download-box .note { font-size: 0.44em; color: #888; margin-top: 8px; font-style: italic; }
+
+    /* ── MERMAID WRAPPER ── */
+    .mermaid-wrap { background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .mermaid { margin: 0 auto; }
+
+    /* ── HIGHLIGHT PILL ── */
+    .pill {
+      display: inline-block; border-radius: 20px; padding: 3px 14px;
+      font-size: 0.5em; font-weight: 700; color: #fff; background: var(--bain-red);
+      margin: 0 3px;
+    }
+    .pill.blue { background: var(--accent); }
+    .pill.green { background: #2d6a4f; }
+
+    /* ── EXERCISE SLIDE ── */
+    .exercise-header {
+      background: linear-gradient(90deg, #1a1a2e, #CC0000);
+      color: #fff; border-radius: 10px; padding: 10px 20px; margin-bottom: 16px;
+      font-size: 0.6em; font-weight: 700; letter-spacing: 0.05em;
+    }
+
+    /* ── COMPARISON TABLE ── */
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.52em; }
+    .compare-table th { background: var(--bain-red); color: #fff; padding: 8px 14px; }
+    .compare-table td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
+    .compare-table tr:nth-child(even) td { background: #f9f9f9; }
+
+    /* ── REVEAL OVERRIDES ── */
+    .reveal .slides section { padding: 30px 40px; }
+    .reveal ul { margin: 0; }
+    .reveal li { font-size: 0.55em; margin-bottom: 6px; }
+    .reveal pre { box-shadow: none; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 1 — TITLE                                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-gradient="linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 55%, #CC0000 100%)">
+  <div style="padding: 30px 0;">
+    <div style="font-size:2.2em; margin-bottom:16px;">🐙</div>
+    <h1>GitHub for Consultants</h1>
+    <h2>A Practical, No-Jargon Introduction</h2>
+    <p class="subtitle">Bain &amp; Company · 2026</p>
+    <div style="margin-top:40px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+      <span class="pill">Clone</span>
+      <span class="pill">Branch</span>
+      <span class="pill">Commit</span>
+      <span class="pill">Push</span>
+      <span class="pill">Merge</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 2 — AGENDA                                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Today's Agenda</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Why GitHub?</strong><span>The problem every team eventually hits when working on the same files</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Key Concepts</strong><span>Plain-English glossary: Repository, Branch, Commit, Push, Merge</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>The Lifecycle of Code</strong><span>Visual diagram of how changes flow from your laptop to the shared repository</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Getting Set Up</strong><span>Install GitHub Desktop (GUI) &amp; GitHub CLI on Windows</span></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Hands-On Exercise</strong><span>Clone → Branch → Commit → Push → Merge, together</span></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Bonus: Claude Code</strong><span>Use AI to build a data visualization — and handle all the git steps by talking to it</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — WHY GITHUB                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 1</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">Why GitHub?</p>
+  <p>The problem every team eventually hits</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 3 — THE VERSIONING NIGHTMARE                    -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Sound Familiar?</h2>
+  <div style="background:#fff; border-radius:14px; padding:20px; box-shadow:0 3px 12px rgba(0,0,0,0.1); font-family:'Courier New',monospace; text-align:left;">
+    <p style="font-size:0.5em; color:#555; margin:0 0 10px 0; font-family:sans-serif;">📁 Project Deliverable / Final Models</p>
+    <div style="font-size:0.48em; line-height:2; color:#333;">
+      📄 Analysis_v1.xlsx<br/>
+      📄 Analysis_v2_FINAL.xlsx<br/>
+      📄 Analysis_v2_FINAL_revised.xlsx<br/>
+      📄 Analysis_v2_FINAL_revised_John_edits.xlsx<br/>
+      📄 Analysis_v2_FINAL_revised_John_edits_2.xlsx<br/>
+      📄 <strong style="color:#CC0000;">Analysis_USE_THIS_ONE.xlsx</strong><br/>
+      📄 Analysis_USE_THIS_ONE_updated.xlsx
+    </div>
+  </div>
+  <p style="font-size:0.5em; color:#777; margin-top:14px; font-style:italic;">GitHub solves this — permanently.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 4 — WHAT IS GITHUB                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>What is GitHub?</h2>
+  <div class="analogy" style="margin-bottom:14px;">
+    <span class="label">Think of it like a PowerPoint on SharePoint… but far more powerful.</span><br/><br/>
+    On SharePoint, multiple people can open and edit the same PowerPoint. But if two people change the same part at the same time, the last save wins — and you lose track of who changed what.
+    <br/><br/>
+    <strong>GitHub automatically records every change with a name, a timestamp, and an author.</strong> You can always go back, see exactly what changed, and safely merge two people's work without conflict.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <span class="emoji">☁️</span>
+      <strong>Cloud Storage</strong>
+      <p>Files live online so the whole team always has access to the latest version</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🕰️</span>
+      <strong>Full History</strong>
+      <p>Every change is recorded. Roll back to any point in time, instantly</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🔀</span>
+      <strong>Safe Collaboration</strong>
+      <p>Work in parallel without stepping on each other's changes</p>
+    </div>
+    <div class="card">
+      <span class="emoji">✅</span>
+      <strong>Review Process</strong>
+      <p>Propose changes for teammates to review and approve before they go live</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — KEY CONCEPTS                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 2</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">Key Concepts</p>
+  <p>Plain-English definitions before we touch anything</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 5 — GLOSSARY                                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>The 6 Terms You Need</h2>
+  <div class="glossary">
+    <div class="gloss-item">
+      <div class="term">📦 Repository (Repo)</div>
+      <div class="def">The project's home on GitHub. It stores all files, the full history of changes, and every branch. Think of it as a SharePoint folder — but with superpowers.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">📋 Clone</div>
+      <div class="def">Download a complete copy of the repository from GitHub onto your own laptop. You get all the files and the full history.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">🌿 Branch</div>
+      <div class="def">A separate, isolated workspace inside the repo. Changes you make on your branch don't affect anyone else's work. Think of it as your personal draft space.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">💾 Commit</div>
+      <div class="def">A saved snapshot of your changes, with a short message describing what you did. Like pressing "Save" — but every save is permanent and labelled.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">⬆️ Push</div>
+      <div class="def">Upload your local commits from your laptop to GitHub so teammates can see your work.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">🔀 Merge</div>
+      <div class="def">Combine your branch's changes into the main project. Usually done after a teammate reviews and approves your Pull Request.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 6 — GIT vs GITHUB                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Git vs GitHub — What's the Difference?</h2>
+  <div style="margin-bottom:16px;">
+    <table class="compare-table">
+      <tr>
+        <th>Git</th>
+        <th>GitHub</th>
+      </tr>
+      <tr>
+        <td>Software that runs <em>on your laptop</em> and tracks changes to files</td>
+        <td>A <em>website and cloud service</em> that hosts Git repositories online</td>
+      </tr>
+      <tr>
+        <td>Like PowerPoint's "Track Changes" feature — but built into your operating system</td>
+        <td>Like SharePoint — but purpose-built for hosting Git repos</td>
+      </tr>
+      <tr>
+        <td>Works offline. No account needed.</td>
+        <td>Needs an internet connection and an account.</td>
+      </tr>
+    </table>
+  </div>
+  <div class="analogy" style="font-size:0.55em;">
+    <strong>Analogy:</strong> Git is the engine. GitHub is the car's dashboard and GPS. You technically only need the engine, but the dashboard makes everything much easier to use.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — LIFECYCLE                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 3</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">The Lifecycle of Code</p>
+  <p>How a change travels from your laptop to the team</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 7 — WORKFLOW DIAGRAM                            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>The GitHub Workflow</h2>
+  <div class="mermaid-wrap">
+    <div class="mermaid">
+flowchart LR
+    A["☁️ GitHub\n(Cloud)"]:::cloud -->|"① Clone\n(first time only)"| B["💻 Your Laptop\n(Local Copy)"]:::local
+    B -->|"② Create Branch"| C["🌿 Your Branch\n(Isolated workspace)"]:::branch
+    C -->|"③ Edit files\n+ Commit"| C
+    C -->|"④ Push"| D["☁️ Your Branch\non GitHub"]:::cloud
+    D -->|"⑤ Pull Request\n+ Review"| E["✅ Merge into Main"]:::merge
+    E -->|"⑥ Pull\n(get updates)"| B
+
+    classDef cloud fill:#1a1a2e,color:#fff,stroke:#CC0000,stroke-width:2px,rx:10
+    classDef local fill:#0077b6,color:#fff,stroke:#005f99,stroke-width:2px,rx:10
+    classDef branch fill:#2d6a4f,color:#fff,stroke:#1b4332,stroke-width:2px,rx:10
+    classDef merge fill:#CC0000,color:#fff,stroke:#990000,stroke-width:2px,rx:10
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 8 — BRANCHING DIAGRAM                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Branching &amp; Merging in Action</h2>
+  <p style="font-size:0.5em; color:#555; margin-bottom:10px;">Two consultants work on the same project <em>at the same time</em>, on separate branches, then merge cleanly.</p>
+  <div class="mermaid-wrap">
+    <div class="mermaid">
+gitGraph
+   commit id: "Kickoff"
+   commit id: "Add baseline data"
+
+   branch anna/market-sizing
+   checkout anna/market-sizing
+   commit id: "Draft market model"
+   commit id: "Refine TAM"
+
+   checkout main
+   branch bob/competitor
+   checkout bob/competitor
+   commit id: "Competitor overview"
+   commit id: "Add SWOT"
+
+   checkout main
+   merge anna/market-sizing id: "Anna Merge"
+   merge bob/competitor id: "Bob Merge"
+   commit id: "Final deliverable"
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — SETUP                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 4</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">Getting Set Up</p>
+  <p>Two tools to install on Windows</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 9 — GITHUB DESKTOP                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Tool 1 — GitHub Desktop (Recommended)</h2>
+  <div class="download-box" style="margin-bottom:16px;">
+    <div class="tool-name">🖥️ GitHub Desktop</div>
+    <div class="tool-desc">A visual application — no command line needed. Click to clone, commit, push, and merge. Perfect for beginners.</div>
+    <div class="url">https://desktop.github.com</div>
+    <div class="note">Supports Windows 10 / 11 · Free · ~100 MB download</div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Go to desktop.github.com and click "Download for Windows"</strong><span>Run the installer (.exe). No admin rights required on most Bain machines.</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Sign in with your GitHub account</strong><span>If you don't have one, create a free account at github.com first. A personal or work email both work.</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>You're ready!</strong><span>GitHub Desktop handles Git behind the scenes — you never need to open a terminal.</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 10 — GITHUB CLI                                  -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Tool 2 — GitHub CLI (Optional, Power Users)</h2>
+  <div class="download-box" style="margin-bottom:16px;">
+    <div class="tool-name">⌨️ GitHub CLI (gh)</div>
+    <div class="tool-desc">A command-line tool for users comfortable in a terminal. Manage repos, Pull Requests, and issues without opening a browser.</div>
+    <div class="url">https://cli.github.com</div>
+    <div class="note">Supports Windows 10 / 11 · Free · Install via winget or .msi installer</div>
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>Install via Windows Package Manager</strong>
+      <div class="cmd-block" style="margin-top:6px;">
+        <span class="prompt">PS&gt;</span> winget install --id GitHub.cli
+      </div>
+    </div>
+    <div class="card">
+      <strong>Then authenticate once</strong>
+      <div class="cmd-block" style="margin-top:6px;">
+        <span class="prompt">PS&gt;</span> gh auth login
+      </div>
+      <p style="font-size:0.42em; color:#666; margin-top:6px;">Follow the prompts — it opens your browser to log in securely.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — OPERATIONS                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 5</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">The 5 Core Operations</p>
+  <p>Clone · Branch · Commit · Push · Merge</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 11 — CLONE                                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>① Clone — Download the Project</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>What it does:</strong> Downloads a complete copy of the repository from GitHub onto your laptop — files, history, and all.
+    <br/><br/>
+    <strong>Analogy:</strong> Checking out a library book. You get your own copy to work on without altering the original on the shelf.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>File → Clone Repository → paste the repo URL → choose a local folder → Clone</p>
+    </div>
+    <div class="card">
+      <strong>Command Line</strong>
+      <div class="cmd-block">
+        <span class="comment"># Clone a repo</span><br/>
+        <span class="prompt">$</span> git clone &lt;repo-url&gt;<br/><br/>
+        <span class="comment"># Example:</span><br/>
+        <span class="prompt">$</span> git clone https://github.com/ajayarn/<br/>
+        &nbsp;&nbsp;Github-Training-For-Consultants.git
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">⚡ You only clone once. After that, use <em>pull</em> to get the latest updates.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 12 — BRANCH                                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>② Branch — Your Personal Workspace</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>What it does:</strong> Creates a separate workspace inside the repo where only your changes happen. The <code style="background:#f0f0f0; padding:1px 5px; border-radius:4px; font-size:0.9em;">main</code> branch stays untouched.
+    <br/><br/>
+    <strong>Analogy:</strong> Making a copy of a PowerPoint to edit, rather than touching the original. When you're happy, you merge your edits back in.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>Click the "Current Branch" dropdown at the top → "New Branch" → name it (e.g. <code>anna/market-sizing</code>) → Create</p>
+    </div>
+    <div class="card">
+      <strong>Command Line</strong>
+      <div class="cmd-block">
+        <span class="comment"># Create and switch to a new branch</span><br/>
+        <span class="prompt">$</span> git checkout -b anna/market-sizing<br/><br/>
+        <span class="comment"># List all branches</span><br/>
+        <span class="prompt">$</span> git branch
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">💡 Branch naming tip: use <code>yourname/short-description</code>, e.g. <code>anna/market-model</code></p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 13 — COMMIT                                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>③ Commit — Save a Snapshot</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>What it does:</strong> Records the current state of your files with a short message describing what you changed and why.
+    <br/><br/>
+    <strong>Analogy:</strong> Taking a photograph of your work and labelling it <em>"Added Q3 revenue projections"</em>. You can always return to that exact photo.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>Changed files appear in the left panel → write a <em>Summary</em> (required) and optional <em>Description</em> → click "Commit to &lt;branch&gt;"</p>
+    </div>
+    <div class="card">
+      <strong>Command Line</strong>
+      <div class="cmd-block">
+        <span class="comment"># Stage all changed files</span><br/>
+        <span class="prompt">$</span> git add .<br/><br/>
+        <span class="comment"># Commit with a message</span><br/>
+        <span class="prompt">$</span> git commit -m "Add Q3 projections"
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">✍️ Good commit messages are short and descriptive: <em>"Update market sizing assumptions"</em>, not <em>"changes"</em></p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 14 — PUSH                                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>④ Push — Upload to GitHub</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>What it does:</strong> Sends your local commits from your laptop up to GitHub so your branch is visible to the rest of the team.
+    <br/><br/>
+    <strong>Analogy:</strong> Uploading a file to SharePoint. Your saved local snapshots are now online and shareable.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>After committing, a blue "Push origin" button appears in the top bar. Click it. Done.</p>
+    </div>
+    <div class="card">
+      <strong>Command Line</strong>
+      <div class="cmd-block">
+        <span class="comment"># Push your branch to GitHub</span><br/>
+        <span class="prompt">$</span> git push origin anna/market-sizing<br/><br/>
+        <span class="comment"># First time: set upstream automatically</span><br/>
+        <span class="prompt">$</span> git push -u origin HEAD
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">🔒 Pushing only affects <em>your branch</em>. Nobody else's work is touched until you merge.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 15 — PULL REQUEST & MERGE                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>⑤ Pull Request &amp; Merge — Propose &amp; Combine</h2>
+  <div class="analogy" style="margin-bottom:14px;">
+    <strong>Pull Request (PR):</strong> A formal proposal to merge your branch into <code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;font-size:0.9em;">main</code>. Teammates can comment, request changes, and approve.
+    <br/><strong>Merge:</strong> GitHub combines your changes into the main branch once the PR is approved.
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Open a Pull Request</strong><span>On github.com → your repo → "Compare &amp; pull request" button → add a title and description → click "Create pull request"</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Review</strong><span>Teammates see your changes line-by-line, leave comments, and click "Approve"</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Merge</strong><span>Click "Merge pull request" → "Confirm merge". Your changes are now in <code>main</code>. 🎉</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Pull the latest</strong><span>Everyone runs <code>git pull</code> (or GitHub Desktop: "Fetch origin") to get the updated main branch on their laptops</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — EXERCISE                            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 6</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">Hands-On Exercise</p>
+  <p>Let's do it together — live</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 16 — EXERCISE OVERVIEW                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Exercise Overview</h2>
+  <div class="exercise-header">📋 Scenario: You're contributing to a team strategy brief.</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Clone the training repository</strong><span>Download the shared project to your laptop</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Create your own branch</strong><span>Name it <code>yourname/intro</code> (e.g. <code>anna/intro</code>)</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Add your name to the contributors file</strong><span>Open <code>contributors.md</code> and add a line with your name and role</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Commit your change</strong><span>Write a commit message: <em>"Add [your name] to contributors"</em></span></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Push &amp; open a Pull Request</strong><span>Upload your branch and propose merging it into main</span></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Review a teammate's PR and approve it</strong><span>Experience the review process from both sides</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 17 — EXERCISE STEP 1-2                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Exercise — Steps 1 &amp; 2: Clone &amp; Branch</h2>
+  <div class="cards cards-2" style="margin-bottom:14px;">
+    <div class="card">
+      <strong>Via GitHub Desktop</strong>
+      <p style="font-size:0.5em; line-height:1.8;">
+        1. File → Clone Repository<br/>
+        2. Paste: <code style="font-size:0.9em;">github.com/ajayarn/Github-Training-For-Consultants</code><br/>
+        3. Choose a folder on your laptop<br/>
+        4. Click "Clone"<br/><br/>
+        Then: click "Current Branch" → "New Branch"<br/>
+        Name it <code>yourname/intro</code>
+      </p>
+    </div>
+    <div class="card">
+      <strong>Via Command Line</strong>
+      <div class="cmd-block" style="font-size:0.46em;">
+        <span class="prompt">$</span> git clone &lt;REPO_URL&gt;<br/>
+        <span class="prompt">$</span> cd Github-Training-For-Consultants<br/>
+        <span class="prompt">$</span> git checkout -b yourname/intro
+      </div>
+    </div>
+  </div>
+  <div class="analogy" style="font-size:0.5em;">
+    ✅ <strong>Check:</strong> In GitHub Desktop you should see your new branch name in the top bar. On the command line, <code>git branch</code> should show <code>* yourname/intro</code>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 18 — EXERCISE STEP 3-4                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Exercise — Steps 3 &amp; 4: Edit &amp; Commit</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <strong>Open contributors.md in any text editor (Notepad, VS Code…)</strong>
+      <span>Add a new line at the bottom of the file:</span>
+      <div class="cmd-block" style="margin-top:6px; font-size:0.46em;">- Anna Kim | Senior Associate | Seoul</div>
+      <span>(replace with your own name, role, and office)</span>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <strong>Commit the change</strong>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+        <div>
+          <span style="font-size:0.48em; color:#555;"><strong>GitHub Desktop:</strong> The file appears on the left. Write "Add [your name] to contributors" in the Summary box → click Commit</span>
+        </div>
+        <div>
+          <div class="cmd-block" style="font-size:0.44em;">
+            <span class="prompt">$</span> git add contributors.md<br/>
+            <span class="prompt">$</span> git commit -m "Add Anna Kim to contributors"
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 19 — EXERCISE STEP 5-6                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Exercise — Steps 5 &amp; 6: Push &amp; Pull Request</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <strong>Push your branch to GitHub</strong>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+        <span style="font-size:0.48em; color:#555;"><strong>GitHub Desktop:</strong> Click the "Push origin" button in the top bar</span>
+        <div class="cmd-block" style="font-size:0.44em;"><span class="prompt">$</span> git push -u origin yourname/intro</div>
+      </div>
+    </div></div>
+    <div class="step"><div class="step-num">5b</div><div class="step-body">
+      <strong>Open a Pull Request on github.com</strong>
+      <span>Go to the repo URL → you'll see a yellow banner "Compare &amp; pull request" → click it → add a title → click "Create pull request"</span>
+    </div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body">
+      <strong>Review a teammate's PR</strong>
+      <span>Pull Requests tab → open a teammate's PR → "Files changed" to see their edits → "Review changes" → "Approve" → "Submit review"</span>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 20 — CHEAT SHEET                                 -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Quick Reference Cheat Sheet</h2>
+  <table class="compare-table" style="font-size:0.46em;">
+    <tr>
+      <th>Action</th>
+      <th>GitHub Desktop</th>
+      <th>Command Line</th>
+    </tr>
+    <tr><td><strong>Clone a repo</strong></td><td>File → Clone Repository → paste URL</td><td><code>git clone &lt;url&gt;</code></td></tr>
+    <tr><td><strong>Create a branch</strong></td><td>Current Branch → New Branch</td><td><code>git checkout -b branch-name</code></td></tr>
+    <tr><td><strong>Switch branch</strong></td><td>Click Current Branch dropdown</td><td><code>git checkout branch-name</code></td></tr>
+    <tr><td><strong>Commit changes</strong></td><td>Write summary → Commit button</td><td><code>git add . &amp;&amp; git commit -m "msg"</code></td></tr>
+    <tr><td><strong>Push to GitHub</strong></td><td>Push origin button</td><td><code>git push -u origin HEAD</code></td></tr>
+    <tr><td><strong>Get latest changes</strong></td><td>Fetch origin → Pull</td><td><code>git pull</code></td></tr>
+    <tr><td><strong>See what changed</strong></td><td>Changes panel on left</td><td><code>git status</code></td></tr>
+    <tr><td><strong>See commit history</strong></td><td>History tab</td><td><code>git log --oneline</code></td></tr>
+    <tr><td><strong>Open a Pull Request</strong></td><td>Branch → Create Pull Request</td><td>go to github.com → PR button</td></tr>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 21 — TIPS & BEST PRACTICES                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Tips &amp; Best Practices</h2>
+  <div class="cards cards-2">
+    <div class="card">
+      <span class="emoji">🌿</span>
+      <strong>Always work on a branch</strong>
+      <p>Never commit directly to <code>main</code>. Always create a branch for your work, no matter how small.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">💬</span>
+      <strong>Write clear commit messages</strong>
+      <p>Future-you (and teammates) will thank you. "Fix typo in slide 3" is better than "update".</p>
+    </div>
+    <div class="card">
+      <span class="emoji">⬇️</span>
+      <strong>Pull before you start</strong>
+      <p>Run "Fetch origin → Pull" each morning to get the latest changes before starting new work.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🔁</span>
+      <strong>Commit often</strong>
+      <p>Small, frequent commits are easier to review and easier to undo than one giant commit.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">👀</span>
+      <strong>Review before merging</strong>
+      <p>Use Pull Requests even on small teams. A second pair of eyes catches errors and spreads knowledge.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🗑️</span>
+      <strong>Delete merged branches</strong>
+      <p>Once a branch is merged, delete it to keep the repo tidy. GitHub prompts you to do this automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 22 — CLAUDE CODE EXERCISE                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>🤖 Bonus Exercise — Build a Data Visualization with Claude Code</h2>
+  <p style="font-size:0.48em; color:#555; margin-bottom:12px;">Tell Claude Code the three steps below. It handles everything — from git operations to writing the web page.</p>
+
+  <div class="steps" style="gap:8px;">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Ask Claude Code to create a branch</strong>
+        <div class="cmd-block" style="margin-top:6px; font-size:0.45em;">Create a new branch called <span style="color:#ffdd77;">anna/data-viz</span>.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Pick one of the 5 tasks below — then ask Claude Code to build it</strong>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:8px;">
+          <div style="background:#f8f0ff; border-radius:8px; padding:8px 10px; border-left:3px solid #7b2d8b;">
+            <span style="font-size:0.44em; font-weight:700; color:#7b2d8b; display:block;">① Priority Matrix</span>
+            <span style="font-size:0.4em; color:#555;">TAM × CAGR bubble chart</span>
+          </div>
+          <div style="background:#f0f8ff; border-radius:8px; padding:8px 10px; border-left:3px solid #0077b6;">
+            <span style="font-size:0.44em; font-weight:700; color:#0077b6; display:block;">② Market Dashboard</span>
+            <span style="font-size:0.4em; color:#555;">Card summary for each market</span>
+          </div>
+          <div style="background:#f0fff4; border-radius:8px; padding:8px 10px; border-left:3px solid #2d6a4f;">
+            <span style="font-size:0.44em; font-weight:700; color:#2d6a4f; display:block;">③ Entry Timeline</span>
+            <span style="font-size:0.4em; color:#555;">Year-by-year entry schedule</span>
+          </div>
+          <div style="background:#fff8f0; border-radius:8px; padding:8px 10px; border-left:3px solid #e07c00;">
+            <span style="font-size:0.44em; font-weight:700; color:#e07c00; display:block;">④ Auto Ranking</span>
+            <span style="font-size:0.4em; color:#555;">TAM × CAGR scorecard</span>
+          </div>
+          <div style="background:#fff0f0; border-radius:8px; padding:8px 10px; border-left:3px solid #CC0000;">
+            <span style="font-size:0.44em; font-weight:700; color:#CC0000; display:block;">⑤ Market Comparator</span>
+            <span style="font-size:0.4em; color:#555;">Side-by-side market comparison</span>
+          </div>
+          <div style="background:#f5f5f5; border-radius:8px; padding:8px 10px; border-left:3px solid #888; display:flex; align-items:center;">
+            <span style="font-size:0.4em; color:#666;">Or bring your own idea!</span>
+          </div>
+        </div>
+        <div class="cmd-block" style="margin-top:8px; font-size:0.43em;">Using data/market-data.csv, build a web page that shows a <span style="color:#ffdd77;">market priority matrix</span>. Save it as visualization.html.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Ask Claude Code to commit, push, merge, and delete the branch</strong>
+        <div class="cmd-block" style="margin-top:6px; font-size:0.45em;">Commit the changes, push to GitHub, merge into main, and delete the branch.</div>
+      </div>
+    </div>
+
+  </div>
+  <p style="font-size:0.42em; color:#888; margin-top:10px;">💡 Install Claude Code: <code>npm install -g @anthropic-ai/claude-code</code> · Run it: <code>claude</code></p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 23 — CLOSING                                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-gradient="linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 55%, #CC0000 100%)">
+  <div style="padding:20px 0;">
+    <div style="font-size:1.8em; margin-bottom:16px;">🎉</div>
+    <h1 style="font-size:1.4em !important;">You Know GitHub Now</h1>
+    <h2 style="font-size:0.75em !important; margin-top:8px;">Clone → Branch → Commit → Push → Merge</h2>
+    <div style="margin:30px 0; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <span class="pill">desktop.github.com</span>
+      <span class="pill">cli.github.com</span>
+      <span class="pill">github.com/ajayarn/Github-Training-For-Consultants</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.12); border-radius:14px; padding:16px 24px; margin-top:10px;">
+      <p style="font-size:0.5em; color:rgba(255,255,255,0.9); line-height:1.8; margin:0;">
+        📚 Resources to keep learning:<br/>
+        <strong style="color:#fff;">docs.github.com</strong> — Official GitHub documentation<br/>
+        <strong style="color:#fff;">learngitbranching.js.org</strong> — Interactive visual Git tutorial<br/>
+        <strong style="color:#fff;">github.com/skills</strong> — Free guided GitHub courses
+      </p>
+    </div>
+  </div>
+</section>
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<!-- Reveal.js Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script>
+  const MERMAID_THEME = {
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#1a1a2e',
+      primaryTextColor: '#ffffff',
+      primaryBorderColor: '#CC0000',
+      lineColor: '#CC0000',
+      secondaryColor: '#0077b6',
+      tertiaryColor: '#2d6a4f',
+      git0: '#CC0000',
+      git1: '#0077b6',
+      git2: '#2d6a4f',
+      git3: '#e07c00',
+      gitBranchLabel0: '#ffffff',
+      gitBranchLabel1: '#ffffff',
+      gitBranchLabel2: '#ffffff',
+      gitBranchLabel3: '#ffffff',
+      commitLabelBackground: '#1a1a2e',
+      commitLabelColor: '#ffffff',
+      commitLabelFontSize: '13px',
+      fontSize: '16px',
+    },
+    gitGraph: { rotateCommitLabel: true },
+    flowchart: { curve: 'basis', useMaxWidth: false },
+  };
+
+  mermaid.initialize({ startOnLoad: false, ...MERMAID_THEME });
+
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    width: 1200,
+    height: 700,
+    margin: 0.05,
+    plugins: [],
+  });
+
+  async function renderAllDiagrams() {
+    const blocks = document.querySelectorAll('.mermaid');
+    for (let i = 0; i < blocks.length; i++) {
+      const el = blocks[i];
+      if (el.dataset.rendered) continue;
+      const code = el.textContent.trim();
+      try {
+        const { svg } = await mermaid.render('mermaid-graph-' + i, code);
+        el.innerHTML = svg;
+        el.dataset.rendered = 'true';
+        const svgEl = el.querySelector('svg');
+        if (svgEl) {
+          svgEl.style.maxWidth = '100%';
+          svgEl.style.height = 'auto';
+        }
+      } catch (err) {
+        console.warn('Mermaid render error on block', i, err);
+      }
+    }
+  }
+
+  Reveal.on('ready', renderAllDiagrams);
+</script>
+</body>
+</html>
