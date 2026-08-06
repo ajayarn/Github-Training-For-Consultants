@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컨설턴트를 위한 GitHub</title>
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --bain-red: #CC0000;
+      --bain-dark: #1a1a2e;
+      --bain-gray: #4a4a4a;
+      --bain-light: #f5f5f5;
+      --accent: #0077b6;
+    }
+
+    .reveal {
+      font-family: 'Segoe UI', 'Malgun Gothic', Arial, sans-serif;
+      font-size: 32px;
+      color: #222;
+    }
+
+    /* ── TITLE SLIDE ── */
+    .title-slide { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 60%, #CC0000 100%); }
+    .title-slide h1 { color: #fff !important; font-size: 1.9em !important; line-height: 1.2; }
+    .title-slide h2 { color: rgba(255,255,255,0.75) !important; font-size: 0.9em !important; font-weight: 300; }
+    .title-slide .subtitle { color: #ffaaaa; font-size: 0.65em; margin-top: 0.4em; }
+
+    /* ── SECTION DIVIDERS ── */
+    .section-slide { background: var(--bain-red); }
+    .section-slide h2 { color: #fff !important; font-size: 1.6em !important; }
+    .section-slide p { color: rgba(255,255,255,0.85) !important; }
+
+    /* ── GENERAL HEADINGS ── */
+    .reveal h2 { color: var(--bain-red); font-size: 1.1em; margin-bottom: 0.4em; border-bottom: 3px solid var(--bain-red); padding-bottom: 0.15em; }
+    .reveal h3 { color: var(--bain-dark); font-size: 0.85em; }
+
+    /* ── CARDS GRID ── */
+    .cards { display: grid; gap: 16px; }
+    .cards-2 { grid-template-columns: 1fr 1fr; }
+    .cards-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+      border-left: 5px solid var(--bain-red);
+      text-align: left;
+    }
+    .card .emoji { font-size: 1.4em; display: block; margin-bottom: 6px; }
+    .card strong { font-size: 0.65em; color: var(--bain-red); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card p, .card span { font-size: 0.52em; color: #444; line-height: 1.5; margin: 0; }
+
+    /* ── STEP BOXES ── */
+    .steps { display: flex; flex-direction: column; gap: 10px; }
+    .step {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: #fff; border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .step-num {
+      background: var(--bain-red); color: #fff;
+      border-radius: 50%; width: 34px; height: 34px; min-width: 34px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.55em;
+    }
+    .step-body strong { font-size: 0.6em; color: #111; display: block; }
+    .step-body span { font-size: 0.5em; color: #555; }
+    .step-body code { font-size: 0.48em; background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-family: 'Courier New', monospace; }
+
+    /* ── COMMAND BLOCKS ── */
+    .cmd-block {
+      background: #1a1a2e; color: #a8ff78;
+      border-radius: 10px; padding: 16px 22px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.52em; text-align: left;
+      margin: 10px 0; line-height: 1.8;
+    }
+    .cmd-block .comment { color: #888; }
+    .cmd-block .prompt { color: #ffaaaa; }
+
+    /* ── CONCEPT ANALOGY ── */
+    .analogy {
+      background: linear-gradient(135deg, #f0f4ff, #fff0f0);
+      border-radius: 14px; padding: 20px 24px;
+      border: 1px solid #ddd; font-size: 0.6em;
+      text-align: left; line-height: 1.7;
+    }
+    .analogy .label { font-weight: 700; color: var(--bain-red); font-size: 1.05em; }
+
+    /* ── GLOSSARY ── */
+    .glossary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .gloss-item {
+      background: #fff; border-radius: 10px; padding: 14px 16px;
+      border-top: 4px solid var(--bain-red);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .gloss-item .term { font-size: 0.58em; font-weight: 700; color: var(--bain-red); }
+    .gloss-item .def { font-size: 0.48em; color: #444; margin-top: 4px; line-height: 1.6; }
+
+    /* ── DOWNLOAD BOXES ── */
+    .download-box {
+      background: #fff; border-radius: 14px;
+      padding: 20px 24px; box-shadow: 0 3px 14px rgba(0,0,0,0.10);
+      border-bottom: 5px solid var(--bain-red); text-align: left;
+    }
+    .download-box .tool-name { font-size: 0.65em; font-weight: 700; color: #111; }
+    .download-box .tool-desc { font-size: 0.5em; color: #555; margin: 4px 0 10px; }
+    .download-box .url { font-size: 0.48em; background: #f0f0f0; border-radius: 6px; padding: 4px 10px; font-family: monospace; display: inline-block; color: var(--accent); }
+    .download-box .note { font-size: 0.44em; color: #888; margin-top: 8px; font-style: italic; }
+
+    /* ── MERMAID WRAPPER ── */
+    .mermaid-wrap { background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .mermaid { margin: 0 auto; }
+
+    /* ── HIGHLIGHT PILL ── */
+    .pill {
+      display: inline-block; border-radius: 20px; padding: 3px 14px;
+      font-size: 0.5em; font-weight: 700; color: #fff; background: var(--bain-red);
+      margin: 0 3px;
+    }
+    .pill.blue { background: var(--accent); }
+    .pill.green { background: #2d6a4f; }
+
+    /* ── EXERCISE SLIDE ── */
+    .exercise-header {
+      background: linear-gradient(90deg, #1a1a2e, #CC0000);
+      color: #fff; border-radius: 10px; padding: 10px 20px; margin-bottom: 16px;
+      font-size: 0.6em; font-weight: 700; letter-spacing: 0.03em;
+    }
+
+    /* ── COMPARISON TABLE ── */
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 0.52em; }
+    .compare-table th { background: var(--bain-red); color: #fff; padding: 8px 14px; }
+    .compare-table td { padding: 8px 14px; border-bottom: 1px solid #ddd; }
+    .compare-table tr:nth-child(even) td { background: #f9f9f9; }
+
+    /* ── REVEAL OVERRIDES ── */
+    .reveal .slides section { padding: 30px 40px; }
+    .reveal ul { margin: 0; }
+    .reveal li { font-size: 0.55em; margin-bottom: 6px; }
+    .reveal pre { box-shadow: none; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 1 — TITLE                                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-gradient="linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 55%, #CC0000 100%)">
+  <div style="padding: 30px 0;">
+    <div style="font-size:2.2em; margin-bottom:16px;">🐙</div>
+    <h1>컨설턴트를 위한 GitHub</h1>
+    <h2>실무 중심 입문 가이드</h2>
+    <p class="subtitle">Bain &amp; Company · 2026</p>
+    <div style="margin-top:40px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+      <span class="pill">Clone</span>
+      <span class="pill">Branch</span>
+      <span class="pill">Commit</span>
+      <span class="pill">Push</span>
+      <span class="pill">Merge</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 2 — AGENDA                                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>오늘의 순서</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>왜 GitHub인가?</strong><span>같은 파일을 함께 작업할 때 모든 팀이 결국 부딪히는 문제</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>핵심 개념</strong><span>Repository, Branch, Commit, Push, Merge — 쉬운 말로 이해하기</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>코드의 생애주기</strong><span>내 노트북에서 팀 공유 Repository까지 변경사항이 흐르는 과정</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>환경 설정</strong><span>GitHub Desktop(GUI) 및 GitHub CLI 설치 방법 (Windows)</span></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><strong>실습</strong><span>Clone → Branch → Commit → Push → Merge, 함께 해봅시다</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — WHY GITHUB                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 1</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">왜 GitHub인가?</p>
+  <p>모든 팀이 결국 부딪히는 문제</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 3 — THE VERSIONING NIGHTMARE                    -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>익숙한 광경인가요?</h2>
+  <div style="background:#fff; border-radius:14px; padding:20px; box-shadow:0 3px 12px rgba(0,0,0,0.1); font-family:'Courier New',monospace; text-align:left;">
+    <p style="font-size:0.5em; color:#555; margin:0 0 10px 0; font-family:'Malgun Gothic',sans-serif;">📁 프로젝트 산출물 / 최종 분석 모델</p>
+    <div style="font-size:0.48em; line-height:2; color:#333;">
+      📄 Analysis_v1.xlsx<br/>
+      📄 Analysis_v2_FINAL.xlsx<br/>
+      📄 Analysis_v2_FINAL_revised.xlsx<br/>
+      📄 Analysis_v2_FINAL_revised_John_edits.xlsx<br/>
+      📄 Analysis_v2_FINAL_revised_John_edits_2.xlsx<br/>
+      📄 <strong style="color:#CC0000;">Analysis_USE_THIS_ONE.xlsx</strong><br/>
+      📄 Analysis_USE_THIS_ONE_updated.xlsx
+    </div>
+  </div>
+  <p style="font-size:0.5em; color:#777; margin-top:14px; font-style:italic;">GitHub이 이 문제를 영구적으로 해결합니다.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 4 — WHAT IS GITHUB                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>GitHub이란 무엇인가요?</h2>
+  <div class="analogy" style="margin-bottom:14px;">
+    <span class="label">SharePoint에서 공동 작업하는 PowerPoint처럼 생각하세요 — 하지만 훨씬 강력합니다.</span><br/><br/>
+    SharePoint에서 여러 사람이 같은 PowerPoint 파일을 열고 수정할 수 있습니다. 하지만 두 사람이 동시에 같은 부분을 고치면 마지막으로 저장한 내용만 살아남고, 누가 무엇을 바꿨는지 추적하기 어렵습니다.
+    <br/><br/>
+    <strong>GitHub은 모든 변경사항에 자동으로 이름, 날짜, 작성자를 기록합니다.</strong> 언제든 이전 버전으로 돌아갈 수 있고, 두 사람의 작업을 충돌 없이 안전하게 합칩니다.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <span class="emoji">☁️</span>
+      <strong>클라우드 저장소</strong>
+      <p>파일이 온라인에 저장되어 팀 전체가 항상 최신 버전에 접근할 수 있습니다</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🕰️</span>
+      <strong>전체 변경 이력</strong>
+      <p>모든 변경사항이 기록됩니다. 언제든지 특정 시점으로 즉시 되돌릴 수 있습니다</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🔀</span>
+      <strong>안전한 협업</strong>
+      <p>서로의 작업을 방해하지 않고 동시에 작업할 수 있습니다</p>
+    </div>
+    <div class="card">
+      <span class="emoji">✅</span>
+      <strong>검토 프로세스</strong>
+      <p>공식 반영 전에 팀원이 변경사항을 검토하고 승인할 수 있습니다</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — KEY CONCEPTS                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 2</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">핵심 개념</p>
+  <p>실습 전에 꼭 알아야 할 용어 정리</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 5 — GLOSSARY                                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>꼭 알아야 할 6가지 용어</h2>
+  <div class="glossary">
+    <div class="gloss-item">
+      <div class="term">📦 Repository (Repo)</div>
+      <div class="def">GitHub에 있는 프로젝트의 집. 모든 파일, 변경 이력, Branch가 저장되는 곳입니다. SharePoint 폴더라고 생각하되, 기능이 훨씬 강력합니다.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">📋 Clone</div>
+      <div class="def">GitHub의 Repository 전체를 내 노트북으로 다운로드하는 것. 파일과 모든 변경 이력이 함께 내려옵니다.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">🌿 Branch</div>
+      <div class="def">Repository 안의 독립된 작업 공간. 내 Branch에서 수정해도 다른 사람의 작업에는 전혀 영향이 없습니다. 개인 초안 공간이라고 생각하세요.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">💾 Commit</div>
+      <div class="def">변경한 내용을 짧은 메모와 함께 영구적으로 저장하는 것. 저장 버튼과 비슷하지만, 각 저장본이 영구 기록으로 남고 라벨이 붙습니다.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">⬆️ Push</div>
+      <div class="def">내 노트북의 Commit을 GitHub에 업로드하여 팀원들이 내 작업을 볼 수 있게 하는 것.</div>
+    </div>
+    <div class="gloss-item">
+      <div class="term">🔀 Merge</div>
+      <div class="def">내 Branch의 변경사항을 메인 프로젝트에 합치는 것. 보통 팀원이 Pull Request를 검토하고 승인한 후 이루어집니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 6 — GIT vs GITHUB                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Git과 GitHub — 무엇이 다를까요?</h2>
+  <div style="margin-bottom:16px;">
+    <table class="compare-table">
+      <tr>
+        <th>Git</th>
+        <th>GitHub</th>
+      </tr>
+      <tr>
+        <td><em>내 노트북에서 실행되는</em> 소프트웨어로, 파일의 변경사항을 추적합니다</td>
+        <td>Git Repository를 온라인에서 호스팅하는 <em>웹사이트이자 클라우드 서비스</em></td>
+      </tr>
+      <tr>
+        <td>PowerPoint의 "변경 내용 추적" 기능이 운영체제에 내장된 것과 비슷합니다</td>
+        <td>SharePoint와 비슷하지만, Git Repository 전용으로 만들어진 서비스입니다</td>
+      </tr>
+      <tr>
+        <td>오프라인에서 작동. 계정 불필요.</td>
+        <td>인터넷 연결과 계정이 필요합니다.</td>
+      </tr>
+    </table>
+  </div>
+  <div class="analogy" style="font-size:0.55em;">
+    <strong>비유:</strong> Git은 엔진, GitHub은 자동차의 계기판과 내비게이션입니다. 엔진만 있어도 기술적으로 작동하지만, 계기판이 있으면 훨씬 사용하기 쉽습니다.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — LIFECYCLE                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 3</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">코드의 생애주기</p>
+  <p>내 노트북에서 팀 공유 Repository까지</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 7 — WORKFLOW DIAGRAM                            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>GitHub 작업 흐름</h2>
+  <div class="mermaid-wrap">
+    <div class="mermaid">
+flowchart LR
+    A["☁️ GitHub\n(클라우드)"]:::cloud -->|"① Clone\n(처음 한 번만)"| B["💻 내 노트북\n(로컬 복사본)"]:::local
+    B -->|"② Branch 생성"| C["🌿 내 Branch\n(독립 작업공간)"]:::branch
+    C -->|"③ 파일 수정\n+ Commit"| C
+    C -->|"④ Push"| D["☁️ 내 Branch\n(GitHub 업로드)"]:::cloud
+    D -->|"⑤ Pull Request\n+ 검토"| E["✅ main에 Merge"]:::merge
+    E -->|"⑥ Pull\n(최신 내용 받기)"| B
+
+    classDef cloud fill:#1a1a2e,color:#fff,stroke:#CC0000,stroke-width:2px,rx:10
+    classDef local fill:#0077b6,color:#fff,stroke:#005f99,stroke-width:2px,rx:10
+    classDef branch fill:#2d6a4f,color:#fff,stroke:#1b4332,stroke-width:2px,rx:10
+    classDef merge fill:#CC0000,color:#fff,stroke:#990000,stroke-width:2px,rx:10
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 8 — BRANCHING DIAGRAM                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>Branch와 Merge 실제로 보기</h2>
+  <p style="font-size:0.5em; color:#555; margin-bottom:10px;">두 명의 컨설턴트가 같은 프로젝트를 <em>동시에</em> 별도의 Branch에서 작업한 뒤, 충돌 없이 합칩니다.</p>
+  <div class="mermaid-wrap">
+    <div class="mermaid">
+gitGraph
+   commit id: "킥오프"
+   commit id: "데이터 추가"
+
+   branch anna/market-sizing
+   checkout anna/market-sizing
+   commit id: "시장 초안"
+   commit id: "TAM 정교화"
+
+   checkout main
+   branch bob/competitor
+   checkout bob/competitor
+   commit id: "경쟁사 개요"
+   commit id: "SWOT 추가"
+
+   checkout main
+   merge anna/market-sizing id: "Anna Merge"
+   merge bob/competitor id: "Bob Merge"
+   commit id: "최종본"
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — SETUP                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 4</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">환경 설정</p>
+  <p>Windows에 설치할 두 가지 도구</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 9 — GITHUB DESKTOP                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>도구 1 — GitHub Desktop (권장)</h2>
+  <div class="download-box" style="margin-bottom:16px;">
+    <div class="tool-name">🖥️ GitHub Desktop</div>
+    <div class="tool-desc">시각적 인터페이스(명령어 불필요). 클릭 한 번으로 Clone, Commit, Push, Merge. 처음 사용자에게 적합합니다.</div>
+    <div class="url">https://desktop.github.com</div>
+    <div class="note">Windows 10 / 11 지원 · 무료 · 약 100 MB</div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>desktop.github.com 접속 후 "Download for Windows" 클릭</strong><span>설치 파일(.exe)을 실행하세요. 대부분의 Bain 노트북에서 관리자 권한 없이 설치됩니다.</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>GitHub 계정으로 로그인</strong><span>계정이 없으면 github.com에서 무료로 만드세요. 개인 또는 회사 이메일 모두 사용 가능합니다.</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>준비 완료!</strong><span>GitHub Desktop이 Git을 내부에서 자동으로 처리합니다 — 터미널을 열 필요가 없습니다.</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 10 — GITHUB CLI                                  -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>도구 2 — GitHub CLI (선택, 고급 사용자)</h2>
+  <div class="download-box" style="margin-bottom:16px;">
+    <div class="tool-name">⌨️ GitHub CLI (gh)</div>
+    <div class="tool-desc">터미널에 익숙한 사용자를 위한 명령어 도구. 브라우저 없이 Repository, Pull Request, Issue를 관리할 수 있습니다.</div>
+    <div class="url">https://cli.github.com</div>
+    <div class="note">Windows 10 / 11 지원 · 무료 · winget 또는 .msi 설치 파일 사용</div>
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>Windows 패키지 관리자로 설치</strong>
+      <div class="cmd-block" style="margin-top:6px;">
+        <span class="prompt">PS&gt;</span> winget install --id GitHub.cli
+      </div>
+    </div>
+    <div class="card">
+      <strong>설치 후 한 번만 인증</strong>
+      <div class="cmd-block" style="margin-top:6px;">
+        <span class="prompt">PS&gt;</span> gh auth login
+      </div>
+      <p style="font-size:0.42em; color:#666; margin-top:6px;">안내를 따라가면 브라우저가 열리며 안전하게 로그인됩니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — OPERATIONS                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 5</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">5가지 핵심 작업</p>
+  <p>Clone · Branch · Commit · Push · Merge</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 11 — CLONE                                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>① Clone — 프로젝트 다운로드</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>하는 일:</strong> GitHub에서 Repository 전체를 내 노트북으로 다운로드합니다. 파일과 모든 변경 이력이 함께 내려옵니다.
+    <br/><br/>
+    <strong>비유:</strong> 도서관에서 책을 대출하는 것. 내 사본을 받아 작업하며 서가의 원본은 그대로 남아 있습니다.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>File → Clone Repository → Repository URL 붙여넣기 → 로컬 폴더 선택 → Clone</p>
+    </div>
+    <div class="card">
+      <strong>명령어</strong>
+      <div class="cmd-block">
+        <span class="comment"># Repository Clone</span><br/>
+        <span class="prompt">$</span> git clone &lt;repo-url&gt;<br/><br/>
+        <span class="comment"># 예시:</span><br/>
+        <span class="prompt">$</span> git clone https://github.com/ajayarn/<br/>
+        &nbsp;&nbsp;Github-Training-For-Consultants.git
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">⚡ Clone은 처음 한 번만 합니다. 이후에는 <em>pull</em>로 최신 내용을 받아옵니다.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 12 — BRANCH                                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>② Branch — 나만의 작업 공간</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>하는 일:</strong> Repository 안에 나만의 독립된 작업 공간을 만듭니다. <code style="background:#f0f0f0; padding:1px 5px; border-radius:4px; font-size:0.9em;">main</code> Branch는 건드리지 않습니다.
+    <br/><br/>
+    <strong>비유:</strong> 원본 PowerPoint를 복사해 복사본에 수정을 하는 것. 만족스러우면 복사본의 변경사항을 원본에 반영하면 됩니다.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>상단의 "Current Branch" 드롭다운 클릭 → "New Branch" → 이름 입력 (예: <code>anna/market-sizing</code>) → Create</p>
+    </div>
+    <div class="card">
+      <strong>명령어</strong>
+      <div class="cmd-block">
+        <span class="comment"># 새 Branch 만들고 이동</span><br/>
+        <span class="prompt">$</span> git checkout -b anna/market-sizing<br/><br/>
+        <span class="comment"># 전체 Branch 목록 보기</span><br/>
+        <span class="prompt">$</span> git branch
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">💡 Branch 이름 팁: <code>이름/짧은설명</code> 형식 사용 (예: <code>anna/market-model</code>)</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 13 — COMMIT                                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>③ Commit — 스냅샷 저장</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>하는 일:</strong> 변경한 내용을 짧은 메모와 함께 영구적으로 기록합니다.
+    <br/><br/>
+    <strong>비유:</strong> 작업한 내용을 사진으로 찍고 <em>"Q3 매출 전망 추가"</em>라고 라벨을 붙이는 것. 언제든 그 사진으로 돌아올 수 있습니다.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>변경된 파일이 왼쪽 패널에 표시됨 → Summary(필수)와 Description(선택) 작성 → "Commit to &lt;branch&gt;" 클릭</p>
+    </div>
+    <div class="card">
+      <strong>명령어</strong>
+      <div class="cmd-block">
+        <span class="comment"># 변경된 파일 스테이징</span><br/>
+        <span class="prompt">$</span> git add .<br/><br/>
+        <span class="comment"># 메시지와 함께 Commit</span><br/>
+        <span class="prompt">$</span> git commit -m "Q3 전망 추가"
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">✍️ 좋은 Commit 메시지는 짧고 명확합니다: <em>"시장 규모 가정 업데이트"</em> > <em>"수정"</em></p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 14 — PUSH                                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>④ Push — GitHub에 업로드</h2>
+  <div class="analogy" style="margin-bottom:16px;">
+    <strong>하는 일:</strong> 내 노트북의 Commit을 GitHub로 전송하여 팀원들이 내 Branch를 볼 수 있게 합니다.
+    <br/><br/>
+    <strong>비유:</strong> SharePoint에 파일을 업로드하는 것. 로컬에 저장된 스냅샷이 이제 온라인에서 공유됩니다.
+  </div>
+  <div class="cards cards-2">
+    <div class="card">
+      <strong>GitHub Desktop</strong>
+      <p>Commit 후 상단에 파란색 "Push origin" 버튼이 나타납니다. 클릭하면 완료.</p>
+    </div>
+    <div class="card">
+      <strong>명령어</strong>
+      <div class="cmd-block">
+        <span class="comment"># 내 Branch를 GitHub에 Push</span><br/>
+        <span class="prompt">$</span> git push origin anna/market-sizing<br/><br/>
+        <span class="comment"># 처음에는 upstream 자동 설정</span><br/>
+        <span class="prompt">$</span> git push -u origin HEAD
+      </div>
+    </div>
+  </div>
+  <p style="font-size:0.45em; color:#888; margin-top:10px;">🔒 Push는 <em>내 Branch에만</em> 영향을 줍니다. Merge 전까지 다른 사람의 작업은 건드리지 않습니다.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 15 — PULL REQUEST & MERGE                       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>⑤ Pull Request &amp; Merge — 제안하고 합치기</h2>
+  <div class="analogy" style="margin-bottom:14px;">
+    <strong>Pull Request (PR):</strong> 내 Branch를 <code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;font-size:0.9em;">main</code>에 합치자는 공식 제안. 팀원들이 댓글을 달고, 수정을 요청하며, 승인할 수 있습니다.
+    <br/><strong>Merge:</strong> PR이 승인되면 GitHub이 내 변경사항을 main Branch에 합칩니다.
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Pull Request 열기</strong><span>github.com → 해당 Repository → "Compare &amp; pull request" 버튼 → 제목과 설명 추가 → "Create pull request" 클릭</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>검토</strong><span>팀원들이 변경사항을 줄 단위로 확인하고 댓글을 남기며 "Approve" 클릭</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Merge</strong><span>"Merge pull request" → "Confirm merge" 클릭. 이제 변경사항이 <code>main</code>에 반영됩니다. 🎉</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>최신 내용 받기</strong><span>팀원 전원이 <code>git pull</code> (또는 GitHub Desktop의 "Fetch origin")을 실행해 최신 main Branch를 내려받습니다</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SECTION DIVIDER — EXERCISE                            -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="section-slide" data-background-color="#CC0000">
+  <h2 style="border:none; color:#fff !important;">Part 6</h2>
+  <p style="font-size:1.3em; font-weight:700; color:#fff;">실습</p>
+  <p>지금 함께 해봅시다</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 16 — EXERCISE OVERVIEW                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>실습 개요</h2>
+  <div class="exercise-header">📋 시나리오: 팀 전략 보고서에 내 이름을 기여자로 추가합니다.</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><strong>실습 Repository Clone</strong><span>공유 프로젝트를 내 노트북으로 다운로드합니다</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><strong>나만의 Branch 만들기</strong><span><code>yourname/intro</code> 형식으로 이름을 지정하세요 (예: <code>anna/intro</code>)</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><strong>기여자 파일에 내 이름 추가</strong><span><code>contributors.md</code>를 열어 이름과 직급을 한 줄 추가합니다</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><strong>변경사항 Commit</strong><span>Commit 메시지: <em>"Add [이름] to contributors"</em></span></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Push 후 Pull Request 열기</strong><span>Branch를 업로드하고 main에 합치자는 제안을 합니다</span></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><strong>팀원의 PR 검토 및 승인</strong><span>양쪽 입장에서 검토 프로세스를 직접 경험합니다</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 17 — EXERCISE STEP 1-2                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>실습 — 1단계 &amp; 2단계: Clone &amp; Branch</h2>
+  <div class="cards cards-2" style="margin-bottom:14px;">
+    <div class="card">
+      <strong>GitHub Desktop으로</strong>
+      <p style="font-size:0.5em; line-height:1.8;">
+        1. File → Clone Repository<br/>
+        2. 채팅에 공유된 Repository URL 붙여넣기<br/>
+        3. 노트북의 폴더 선택<br/>
+        4. "Clone" 클릭<br/><br/>
+        그런 다음: "Current Branch" → "New Branch"<br/>
+        <code>yourname/intro</code> 입력 후 Create
+      </p>
+    </div>
+    <div class="card">
+      <strong>명령어로</strong>
+      <div class="cmd-block" style="font-size:0.46em;">
+        <span class="prompt">$</span> git clone &lt;REPO_URL&gt;<br/>
+        <span class="prompt">$</span> cd Github-Training-For-Consultants<br/>
+        <span class="prompt">$</span> git checkout -b yourname/intro
+      </div>
+    </div>
+  </div>
+  <div class="analogy" style="font-size:0.5em;">
+    ✅ <strong>확인:</strong> GitHub Desktop 상단에 새 Branch 이름이 표시되면 성공. 명령어에서는 <code>git branch</code>가 <code>* yourname/intro</code>를 표시해야 합니다.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 18 — EXERCISE STEP 3-4                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>실습 — 3단계 &amp; 4단계: 편집 &amp; Commit</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">3</div><div class="step-body">
+      <strong>contributors.md를 텍스트 편집기(메모장, VS Code 등)로 열기</strong>
+      <span>파일 맨 아래에 새 줄을 추가하세요:</span>
+      <div class="cmd-block" style="margin-top:6px; font-size:0.46em;">- Anna Kim | Senior Associate | Seoul</div>
+      <span>(이름, 직급, 오피스로 교체하세요)</span>
+    </div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body">
+      <strong>변경사항 Commit</strong>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+        <div>
+          <span style="font-size:0.48em; color:#555;"><strong>GitHub Desktop:</strong> 파일이 왼쪽 패널에 나타남 → Summary 란에 "Add Anna Kim to contributors" 입력 → Commit 클릭</span>
+        </div>
+        <div>
+          <div class="cmd-block" style="font-size:0.44em;">
+            <span class="prompt">$</span> git add contributors.md<br/>
+            <span class="prompt">$</span> git commit -m "Add Anna Kim to contributors"
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 19 — EXERCISE STEP 5-6                          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>실습 — 5단계 &amp; 6단계: Push &amp; Pull Request</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">5</div><div class="step-body">
+      <strong>Branch를 GitHub에 Push</strong>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:6px;">
+        <span style="font-size:0.48em; color:#555;"><strong>GitHub Desktop:</strong> 상단의 "Push origin" 버튼 클릭</span>
+        <div class="cmd-block" style="font-size:0.44em;"><span class="prompt">$</span> git push -u origin yourname/intro</div>
+      </div>
+    </div></div>
+    <div class="step"><div class="step-num">5b</div><div class="step-body">
+      <strong>github.com에서 Pull Request 열기</strong>
+      <span>Repository URL 접속 → 노란색 배너 "Compare &amp; pull request" 클릭 → 제목 추가 → "Create pull request" 클릭</span>
+    </div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body">
+      <strong>팀원의 PR 검토</strong>
+      <span>Pull Requests 탭 → 팀원의 PR 열기 → "Files changed"에서 변경사항 확인 → "Review changes" → "Approve" → "Submit review"</span>
+    </div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 20 — CHEAT SHEET                                 -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>빠른 참조 치트시트</h2>
+  <table class="compare-table" style="font-size:0.46em;">
+    <tr>
+      <th>작업</th>
+      <th>GitHub Desktop</th>
+      <th>명령어</th>
+    </tr>
+    <tr><td><strong>Repository Clone</strong></td><td>File → Clone Repository → URL 붙여넣기</td><td><code>git clone &lt;url&gt;</code></td></tr>
+    <tr><td><strong>Branch 생성</strong></td><td>Current Branch → New Branch</td><td><code>git checkout -b branch-name</code></td></tr>
+    <tr><td><strong>Branch 전환</strong></td><td>Current Branch 드롭다운 클릭</td><td><code>git checkout branch-name</code></td></tr>
+    <tr><td><strong>Commit</strong></td><td>Summary 작성 → Commit 버튼</td><td><code>git add . &amp;&amp; git commit -m "메시지"</code></td></tr>
+    <tr><td><strong>GitHub에 Push</strong></td><td>Push origin 버튼</td><td><code>git push -u origin HEAD</code></td></tr>
+    <tr><td><strong>최신 내용 받기</strong></td><td>Fetch origin → Pull</td><td><code>git pull</code></td></tr>
+    <tr><td><strong>변경사항 확인</strong></td><td>왼쪽 Changes 패널</td><td><code>git status</code></td></tr>
+    <tr><td><strong>Commit 이력 보기</strong></td><td>History 탭</td><td><code>git log --oneline</code></td></tr>
+    <tr><td><strong>Pull Request 열기</strong></td><td>Branch → Create Pull Request</td><td>github.com → PR 버튼</td></tr>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 21 — TIPS & BEST PRACTICES                      -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>팁 &amp; 모범 사례</h2>
+  <div class="cards cards-2">
+    <div class="card">
+      <span class="emoji">🌿</span>
+      <strong>항상 Branch에서 작업하기</strong>
+      <p><code>main</code>에 직접 Commit하지 마세요. 작은 작업이라도 항상 Branch를 만드세요.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">💬</span>
+      <strong>Commit 메시지를 명확하게</strong>
+      <p>미래의 나와 팀원을 위해. "슬라이드 3 오타 수정"이 "수정"보다 훨씬 낫습니다.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">⬇️</span>
+      <strong>시작 전에 Pull하기</strong>
+      <p>매일 아침 "Fetch origin → Pull"을 실행해 최신 변경사항을 받아온 뒤 작업을 시작하세요.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🔁</span>
+      <strong>자주 Commit하기</strong>
+      <p>작은 Commit 여러 개가 하나의 큰 Commit보다 검토하기 쉽고 되돌리기도 편합니다.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">👀</span>
+      <strong>Merge 전에 검토하기</strong>
+      <p>소규모 팀에서도 Pull Request를 활용하세요. 두 번째 시선이 오류를 잡고 지식을 공유합니다.</p>
+    </div>
+    <div class="card">
+      <span class="emoji">🗑️</span>
+      <strong>Merge된 Branch 삭제하기</strong>
+      <p>Branch가 Merge되면 삭제하여 Repository를 깔끔하게 유지하세요. GitHub이 자동으로 안내해 줍니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 22 — CLAUDE CODE EXERCISE                        -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section>
+  <h2>🤖 보너스 실습 — Claude Code로 데이터 시각화 만들기</h2>
+  <p style="font-size:0.48em; color:#555; margin-bottom:12px;">아래 3단계를 Claude Code에 그대로 말하세요. Git 작업부터 웹페이지 제작까지 AI가 전부 처리합니다.</p>
+
+  <div class="steps" style="gap:8px;">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Branch 만들기</strong>
+        <div class="cmd-block" style="margin-top:6px; font-size:0.45em;">새 branch를 만들어줘. 이름은 <span style="color:#ffdd77;">anna/data-viz</span> 으로.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>아래 5가지 중 하나를 골라 웹페이지 만들기를 요청</strong>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:8px;">
+          <div style="background:#f8f0ff; border-radius:8px; padding:8px 10px; border-left:3px solid #7b2d8b;">
+            <span style="font-size:0.44em; font-weight:700; color:#7b2d8b; display:block;">① 우선순위 매트릭스</span>
+            <span style="font-size:0.4em; color:#555;">TAM × CAGR 버블 차트</span>
+          </div>
+          <div style="background:#f0f8ff; border-radius:8px; padding:8px 10px; border-left:3px solid #0077b6;">
+            <span style="font-size:0.44em; font-weight:700; color:#0077b6; display:block;">② 시장 대시보드</span>
+            <span style="font-size:0.4em; color:#555;">시장별 카드 요약 페이지</span>
+          </div>
+          <div style="background:#f0fff4; border-radius:8px; padding:8px 10px; border-left:3px solid #2d6a4f;">
+            <span style="font-size:0.44em; font-weight:700; color:#2d6a4f; display:block;">③ 진입 타임라인</span>
+            <span style="font-size:0.4em; color:#555;">연도별 진입 일정 시각화</span>
+          </div>
+          <div style="background:#fff8f0; border-radius:8px; padding:8px 10px; border-left:3px solid #e07c00;">
+            <span style="font-size:0.44em; font-weight:700; color:#e07c00; display:block;">④ 자동 시장 랭킹</span>
+            <span style="font-size:0.4em; color:#555;">TAM × CAGR 점수 스코어카드</span>
+          </div>
+          <div style="background:#fff0f0; border-radius:8px; padding:8px 10px; border-left:3px solid #CC0000;">
+            <span style="font-size:0.44em; font-weight:700; color:#CC0000; display:block;">⑤ 시장 비교 도구</span>
+            <span style="font-size:0.4em; color:#555;">두 시장 나란히 비교</span>
+          </div>
+          <div style="background:#f5f5f5; border-radius:8px; padding:8px 10px; border-left:3px solid #888; display:flex; align-items:center;">
+            <span style="font-size:0.4em; color:#666;">또는 본인만의 아이디어로!</span>
+          </div>
+        </div>
+        <div class="cmd-block" style="margin-top:8px; font-size:0.43em;">data/market-data.csv 데이터로 <span style="color:#ffdd77;">시장 우선순위 매트릭스</span>를<br/>보여주는 웹페이지를 만들어줘. 파일명은 visualization.html로 해줘.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Commit → Push → Merge → Branch 삭제</strong>
+        <div class="cmd-block" style="margin-top:6px; font-size:0.45em;">변경사항을 commit하고 GitHub에 push한 다음, main에 merge하고 branch를 삭제해줘.</div>
+      </div>
+    </div>
+
+  </div>
+  <p style="font-size:0.42em; color:#888; margin-top:10px;">💡 Claude Code 설치: <code>npm install -g @anthropic-ai/claude-code</code> · 실행: <code>claude</code></p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 23 — CLOSING                                     -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-gradient="linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 55%, #CC0000 100%)">
+  <div style="padding:20px 0;">
+    <div style="font-size:1.8em; margin-bottom:16px;">🎉</div>
+    <h1 style="font-size:1.4em !important;">이제 GitHub을 쓸 수 있습니다</h1>
+    <h2 style="font-size:0.75em !important; margin-top:8px;">Clone → Branch → Commit → Push → Merge</h2>
+    <div style="margin:30px 0; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <span class="pill">desktop.github.com</span>
+      <span class="pill">cli.github.com</span>
+      <span class="pill">github.com/ajayarn/Github-Training-For-Consultants</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.12); border-radius:14px; padding:16px 24px; margin-top:10px;">
+      <p style="font-size:0.5em; color:rgba(255,255,255,0.9); line-height:1.8; margin:0;">
+        📚 더 배우고 싶다면:<br/>
+        <strong style="color:#fff;">docs.github.com</strong> — GitHub 공식 문서<br/>
+        <strong style="color:#fff;">learngitbranching.js.org</strong> — 시각적 인터랙티브 Git 튜토리얼<br/>
+        <strong style="color:#fff;">github.com/skills</strong> — 무료 GitHub 가이드 과정
+      </p>
+    </div>
+  </div>
+</section>
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<!-- Reveal.js Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script>
+  const MERMAID_THEME = {
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#1a1a2e',
+      primaryTextColor: '#ffffff',
+      primaryBorderColor: '#CC0000',
+      lineColor: '#CC0000',
+      secondaryColor: '#0077b6',
+      tertiaryColor: '#2d6a4f',
+      git0: '#CC0000',
+      git1: '#0077b6',
+      git2: '#2d6a4f',
+      git3: '#e07c00',
+      gitBranchLabel0: '#ffffff',
+      gitBranchLabel1: '#ffffff',
+      gitBranchLabel2: '#ffffff',
+      gitBranchLabel3: '#ffffff',
+      commitLabelBackground: '#1a1a2e',
+      commitLabelColor: '#ffffff',
+      commitLabelFontSize: '13px',
+      fontSize: '16px',
+    },
+    gitGraph: { rotateCommitLabel: true },
+    flowchart: { curve: 'basis', useMaxWidth: false },
+  };
+
+  mermaid.initialize({ startOnLoad: false, ...MERMAID_THEME });
+
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    width: 1200,
+    height: 700,
+    margin: 0.05,
+    plugins: [],
+  });
+
+  // Explicitly render every .mermaid block using mermaid.render()
+  // This bypasses Reveal.js visibility issues (hidden slides have zero dimensions)
+  async function renderAllDiagrams() {
+    const blocks = document.querySelectorAll('.mermaid');
+    for (let i = 0; i < blocks.length; i++) {
+      const el = blocks[i];
+      if (el.dataset.rendered) continue;
+      const code = el.textContent.trim();
+      try {
+        const { svg } = await mermaid.render('mermaid-graph-' + i, code);
+        el.innerHTML = svg;
+        el.dataset.rendered = 'true';
+        // Make the inner SVG responsive
+        const svgEl = el.querySelector('svg');
+        if (svgEl) {
+          svgEl.style.maxWidth = '100%';
+          svgEl.style.height = 'auto';
+        }
+      } catch (err) {
+        console.warn('Mermaid render error on block', i, err);
+      }
+    }
+  }
+
+  Reveal.on('ready', renderAllDiagrams);
+</script>
+</body>
+</html>
